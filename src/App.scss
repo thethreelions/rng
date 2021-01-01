@@ -1,0 +1,23 @@
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  flex-direction: column;
+
+  .page-instruction {
+    color: white;
+    opacity: 0.2;
+    margin: 24px 0 0;
+  }
+
+  .settings {
+    .btn {
+      color: rgba(255,255,255,0.5);
+      box-shadow: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
