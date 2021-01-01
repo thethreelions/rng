@@ -11,7 +11,7 @@ const Odometer = ({number, digits = 2, transformSpeed = 600, onStopCounting}) =>
 
   useEffect(() => {
     let a = null;
-    if (number !== currentNumber) {
+    if (number !== null && number !== currentNumber) {
       const distance = Math.abs(currentNumber - number);
       setStep(Math.floor(Math.max(1, distance / 40)));
       a = setTimeout(() => {
@@ -20,16 +20,20 @@ const Odometer = ({number, digits = 2, transformSpeed = 600, onStopCounting}) =>
     } else {
       onStopCounting();
     }
-    setCounting(number !== currentNumber);
+    setCounting(number !== null && number !== currentNumber);
     return () => {
       clearInterval(a);
     };
-  }, [step, number, currentNumber, speed]);
+  }, [step, number, currentNumber, speed, onStopCounting]);
 
   useEffect(() => {
-    if (currentNumber !== number) {
-      // Whenever the number changes, we set the counting interval
-      setSpeed(transformSpeed / Math.abs(currentNumber - number));
+    if (number !== null) {
+      if (currentNumber !== number) {
+        // Whenever the number changes, we set the counting interval
+        setSpeed(transformSpeed / Math.abs(currentNumber - number));
+      }
+    } else {
+      setCurrentNumber(0);
     }
   }, [number]);
 
@@ -37,7 +41,7 @@ const Odometer = ({number, digits = 2, transformSpeed = 600, onStopCounting}) =>
   const numbers = ("" + currentNumber).padStart(digits, '0').split('');
 
   return <div className={"Odometer" + (counting ? ' counting' : '')}>
-    {numbers.map((n, i) => <Digits key={i} n={n * 1} />)}
+    {number === null ? <Digits n={"-"} /> : numbers.map((n, i) => <Digits key={i} n={n * 1} />)}
   </div>;
 };
 

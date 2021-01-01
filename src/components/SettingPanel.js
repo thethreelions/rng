@@ -5,6 +5,7 @@ const SettingPanel = props => {
 
   const {onOK, onCancel} = props;
 
+  const [unique, setUnique] = useState(props.unique);
   const [min, setMin] = useState(props.min);
   const [max, setMax] = useState(props.max);
 
@@ -13,15 +14,10 @@ const SettingPanel = props => {
   };
 
   const handleOK = () => {
-    onOK(min * 1, max * 1);
-  };
-
-  const handleMinChange = e => {
-    setMin(e.target.value.replace(/[^\d]/g, '') * 1);
-  };
-
-  const handleMaxChange = e => {
-    setMax(e.target.value.replace(/[^\d]/g, '') * 1);
+    onOK(('' + min).replace(/[^\d]/g, '') * 1,
+      ('' + max).replace(/[^\d]/g, '') * 1,
+      unique
+    );
   };
 
   // min/max must not be same
@@ -31,24 +27,28 @@ const SettingPanel = props => {
     <div className={"overlay"}>
       <div className={"box"}>
         <div className={"header"}>
-          Settings
+          Set Range
         </div>
         <div className={"body"}>
           <div className={"settings"}>
             <div className={"instruction"}>
-              You can set the minimum and maximum number of the generator. Numbers are inclusive.
+              Numbers are inclusive.
             </div>
             <div className={"setting"}>
-              <div className={"lbl"}>Minimum number</div>
+              <div className={"lbl"}>Min</div>
               <div className={"val"}>
-                <input type={"text"} value={min} onChange={handleMinChange} className={"form-control"} />
+                <input type={"text"} value={min} onChange={e => setMin(e.target.value)} className={"form-control"} />
               </div>
             </div>
             <div className={"setting"}>
-              <div className={"lbl"}>Maximum number</div>
+              <div className={"lbl"}>Max</div>
               <div className={"val"}>
-                <input type={"text"} value={max} onChange={handleMaxChange} className={"form-control"} />
+                <input type={"text"} value={max} onChange={e => setMax(e.target.value)} className={"form-control"} />
               </div>
+            </div>
+            <div className="form-check">
+              <input type="checkbox" className="form-check-input" id="unique" defaultChecked={unique} onChange={e => setUnique(e.target.checked)} />
+                <label className="form-check-label" htmlFor="unique">Unique Only</label>
             </div>
           </div>
         </div>

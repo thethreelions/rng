@@ -1,0 +1,16 @@
+.Picker {
+  text-align: center;
+  width: 100%;
+
+  .picker-footer {
+    margin: 32px 0 0;
+    .disabled {
+      color: #FF5722;
+    }
+  }
+
+  .range {
+    margin-top: 24px;
+    color: rgba(255,255,255,0.2);
+  }
+}

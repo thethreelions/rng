@@ -4,7 +4,28 @@
   align-items: center;
   height: 100%;
   flex-direction: column;
-  padding: 0 32px;
+  padding: 8px 16px;
+
+  .main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .app-footer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .instruction {
+      color: rgba(255,255,255,0.3);
+    }
+    .actions {
+      text-align: right;
+    }
+  }
 
   .page-instruction {
     color: white;

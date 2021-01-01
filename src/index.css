@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  color: white;
 }
 
 code {
@@ -18,4 +19,13 @@ code {
 
 body {
   background: #263238;
+}
+
+.btn-text{
+  color: rgba(255,255,255,0.5);
+  padding: 0;
+}
+
+.btn-text:hover{
+  color: rgba(255,255,255,1);
 }
