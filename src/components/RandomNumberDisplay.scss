@@ -1,0 +1,37 @@
+.RandomNumberDisplay {
+  display: flex;
+  background: #ff9800;
+  font-family: "Courier Prime", monospace;
+  padding: 24px 12px;
+  border-radius: 24px;
+  transition: all 0.2s;
+  opacity: 1;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+  user-select: none;
+  justify-content: center;
+  cursor: pointer;
+
+  &.counting {
+    opacity: 0.1;
+  }
+
+  &:hover {
+    //background: green;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+  }
+
+  @media(max-width: 1080px) {
+    padding: 16px 8px;
+    border-radius: 20px;
+  }
+
+  @media(max-width: 960px) {
+    padding: 16px 6px;
+    border-radius: 20px;
+  }
+
+  @media(max-width: 768px) {
+    padding: 8px 4px;
+    border-radius: 16px;
+  }
+}

@@ -37,13 +37,13 @@ const SettingPanel = props => {
             <div className={"setting"}>
               <div className={"lbl"}>Min</div>
               <div className={"val"}>
-                <input type={"text"} value={min} onChange={e => setMin(e.target.value)} className={"form-control"} />
+                <input type={"text"} value={min} onChange={e => setMin(e.target.value)} className={"form-control"} maxLength={4} />
               </div>
             </div>
             <div className={"setting"}>
               <div className={"lbl"}>Max</div>
               <div className={"val"}>
-                <input type={"text"} value={max} onChange={e => setMax(e.target.value)} className={"form-control"} />
+                <input type={"text"} value={max} onChange={e => setMax(e.target.value)} className={"form-control"} maxLength={4} />
               </div>
             </div>
             <div className="form-check">

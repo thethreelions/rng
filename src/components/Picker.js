@@ -1,6 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, forwardRef, useImperativeHandle} from 'react';
 import './Picker.scss';
-import Odometer from "./Odometer";
+import RandomNumberDisplay from "./RandomNumberDisplay";
 
 //https://stackoverflow.com/a/2450976
 const shuffle = arr => {
@@ -21,20 +21,28 @@ const shuffle = arr => {
   return arr;
 };
 
-const Picker = ({
-  min, max, unique = true
-}) => {
+const lastNumberRaw = window.localStorage.getItem('rng-lastNumber');
+const lastNumber = lastNumberRaw !== null ? parseInt(lastNumberRaw, 10) : null;
+
+const Picker = forwardRef(({min, max, unique = true}, ref) => {
 
   const [disabled, setDisabled] = useState(false);
-  const [counting, setCounting] = useState(false);
-  const [number, setNumber] = useState(null);
+  const [number, setNumber] = useState(lastNumber);
   const [indices, setIndices] = useState([]);
+  const [run, setRun] = useState(false);
+
+  useImperativeHandle(ref, () => ({
+    reset() {
+      reset();
+    }
+  }));
 
   const reset = () => {
     setNumber(null);
     const indices = Array.from({length: max - min + 1},(v, k) => k + min);
     setIndices(shuffle(indices));
-  }
+    window.localStorage.removeItem('rng-lastNumber');
+  };
 
   const getNumber = () => {
     if (unique) {
@@ -50,62 +58,80 @@ const Picker = ({
   };
 
   const generate = () => {
-    if (!disabled && !counting) {
-      setCounting(true);
+    if (!disabled) {
       const number = getNumber();
       setNumber(number);
+      window.localStorage.setItem('rng-lastNumber', number);
     }
   };
 
   const handleReset = e => {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (window.confirm('Reset unique numbers?')) {
       reset();
     }
   }
 
   useEffect(() => {
-    setDisabled(indices.length === 0);
-  }, [indices.length]);
+    const localIndices = window.localStorage.getItem('rng-indices');
+    if (localIndices !== null) {
+      const reload = localIndices.split(',').map(i => parseInt(i, 10));
+      setIndices(reload);
+    }
+  }, []);
 
-  // reset whenever number changed.
   useEffect(() => {
-    reset();
-  }, [min, max, unique]);
+    setDisabled(indices.length === 0);
+    window.localStorage.setItem('rng-indices', indices.join(','));
+  }, [indices, indices.length]);
 
   useEffect(() => {
     const handleKeydown = e => {
       if (e.keyCode === 32) {
-        generate();
+        handleStartSelecting();
+      }
+      if (e.key === 'x' || e.key === 'X') {
+        handleReset();
       }
     };
+    const handleKeyup = e => {
+      if (e.keyCode === 32) handleStopSelecting();
+    };
     document.addEventListener('keydown', handleKeydown);
+    document.addEventListener('keyup', handleKeyup);
     return () => {
       document.removeEventListener('keydown', handleKeydown)
+      document.removeEventListener('keyup', handleKeyup)
     };
-  }, [counting, min, max]);
+  }, [generate, run]);
 
-  const handlePickOne = () => generate();
-
-  const handleOdometerStopCounting = () => {
-    setCounting(false);
+  const handleStartSelecting = e => {
+    if (!run && !disabled) {
+      setRun(true);
+    }
+  };
+  const handleStopSelecting = () => {
+    generate();
+    setRun(false);
   };
 
-  const digits = Math.floor(Math.log10(max) + 1);
-
   return <div className={"Picker" + (disabled ? ' disabled' : '')}>
-    <div onClick={handlePickOne}>
-      <Odometer number={number} digits={digits} onStopCounting={handleOdometerStopCounting} />
+    <div onMouseDown={handleStartSelecting} onMouseUp={handleStopSelecting}>
+      <RandomNumberDisplay
+        min={min}
+        max={max}
+        run={run}
+        number={number} />
     </div>
     <div className={"picker-footer"}>
-      {indices.length > 0 && <div className={"left"}>{indices.length} {indices.length === 1 ? 'number' : 'numbers'} left</div>}
+      {indices.length > 0 && unique && <div className={"left"}>{indices.length} {indices.length === 1 ? 'number' : 'numbers'} left</div>}
       {disabled && <div className={"disabled"}>
         Numbers exhausted
       </div>}
-      {unique && <button className={"btn btn-text"} onClick={handleReset}>[Reset Unique]</button>}
+      {unique && <button className={"btn btn-text"} onMouseUp={handleReset}>[Reset Unique]</button>}
       <div className={"range"}>{min} - {max}{unique && ' (Unique)'}</div>
     </div>
   </div>
-}
+});
 
 export default Picker;
