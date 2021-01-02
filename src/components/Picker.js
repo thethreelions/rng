@@ -74,7 +74,9 @@ const Picker = forwardRef(({min, max, unique = true}, ref) => {
 
   useEffect(() => {
     const localIndices = window.localStorage.getItem('rng-indices');
-    if (localIndices !== null) {
+    if (/[^\d,]/.test(localIndices) || localIndices === '') {
+      reset();
+    } else {
       const reload = localIndices.split(',').map(i => parseInt(i, 10));
       setIndices(reload);
     }
