@@ -2,6 +2,8 @@
 
 This is a simple project built to generate random number in a class room setting.
 
+[Demo](https://thethreelions.github.io/rng/)
+
 ## Available Scripts
 
 In the project directory, you can run:
